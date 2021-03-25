@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model credential {
+  id       Int    @id @default(autoincrement())
+  login    String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
+  role     String @db.VarChar(255)
+  userId   Int    @unique
+  user     user   @relation(fields: [userId], references: [id])
+}
+
+model user {
+  id         Int         @id @default(autoincrement())
+  name       String      @db.VarChar(255)
+  email      String      @unique @db.VarChar(255)
+  credential credential?
+  grade      grade[]
+}
+
+model grade {
+  id     Int    @id @default(autoincrement())
+  symbol String @db.VarChar(255)
+  user   user[]
+  plan   plan?
+}
+
+model plan {
+  id       Int   @id @default(autoincrement())
+  grade    grade @relation(fields: [gradeId], references: [id])
+  jsonPlan Json
+  gradeId  Int
+}
+
+model lesson {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+  room String @db.VarChar(255)
+}
+
+model hours {
+  id   Int    @id @default(autoincrement())
+  from String @db.VarChar(6)
+  to   String @db.VarChar(6)
+}
