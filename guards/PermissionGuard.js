@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
     req.headers.authorization && req.headers.authorization.split(" ")[1];
 
   // *** Token hasn't been supplied
-  if (!token || token === "") return PrettyError(res, TOKEN_MISSING);
+  if (!token) return PrettyError(res, TOKEN_MISSING);
 
   const result = verify(token);
 
