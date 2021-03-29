@@ -22,6 +22,17 @@ module.exports.UNPROCESSABLE_TOKEN = {
 };
 
 module.exports.JSON_INVALID = {
-  message: "Unproccessable JSON. Syntax Error",
+  message: "Unproccessable JSON. Syntax Error.",
   code: 422,
+};
+
+module.exports.JSON_INVALID = {
+  message: "Unproccessable JSON. Syntax Error.",
+  code: 422,
+};
+
+module.exports.INSUFFICIENT_PERMISSIONS = {
+  message:
+    "Token's role has insufficient permission level to access this path.",
+  code: 403,
 };

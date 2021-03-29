@@ -6,10 +6,17 @@
  */
 
 const { verify } = require("../tools/Token.tools");
-const { setPermittedPaths } = require("../tools/Permission.tools");
+const {
+  generateRestrictions,
+  isPermitted,
+} = require("../tools/Permission.tools");
 
 const PrettyError = require("../tools/Errors.tools");
-const { TOKEN_MISSING, TOKEN_INVALID } = require("../tools/Error.messages");
+const {
+  TOKEN_MISSING,
+  TOKEN_INVALID,
+  INSUFFICIENT_PERMISSIONS,
+} = require("../tools/Error.messages");
 
 module.exports = (req, res, next) => {
   const token =
@@ -23,14 +30,17 @@ module.exports = (req, res, next) => {
   // *** Token is expired or invalid
   if (!result) return PrettyError(res, TOKEN_INVALID);
 
-  const { login, role } = result.payload;
+  const { login, role, id } = result.payload;
 
+  // *** Asign payload values for potential further use
+  req.id = id;
   req.login = login;
   req.role = role;
 
   // *** Setup path(s) for which user is permitted to request
-  setPermittedPaths(req, result.payload);
+  const restrictions = generateRestrictions(role, id);
 
-  // *** Proceed when everything is fine
-  next();
+  // *** Proceed when everything is fine or throw an error
+  if (isPermitted(req, restrictions)) next();
+  else return PrettyError(res, INSUFFICIENT_PERMISSIONS);
 };
