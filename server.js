@@ -24,9 +24,6 @@ app.use(require("helmet")());
 // *** Invalid JSON prevention
 app.use(require("./tools/JSONValidator.tools.js"));
 
-// *** Perimssion Interceptor
-app.use(require("./guards/PermissionGuard"));
-
 // *** Routes
 app.use(require("./routes/MasterRouter.js"));
 

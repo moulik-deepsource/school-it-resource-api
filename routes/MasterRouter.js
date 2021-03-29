@@ -9,6 +9,6 @@ const AuthServerController = require("../controllers/AuthServerController.js");
 
 // ! Route setup
 router.use("/auth", AuthServerController);
-router.use("/users", UserController);
+router.use("/users", require("../guards/PermissionGuard"), UserController);
 
 module.exports = router;

@@ -1,26 +1,9 @@
 // Default code
 const code = 400;
 
-module.exports.USER_DOES_NOT_EXISTS = {
-  message: "User does not exists.",
-  code,
-};
-
 module.exports.TOKEN_BLACKLISTED = {
   message: "Recieved token has been blacklisted.",
   code: 403,
-};
-
-module.exports.PASSWORD_INVALID = { message: "Password is invalid.", code };
-
-module.exports.TOKEN_ALREADY_ISSUED = {
-  message: "Token has already been issued.",
-  code,
-};
-
-module.exports.MISSING_PARAM = {
-  message: "Some parameters are missing.",
-  code,
 };
 
 module.exports.TOKEN_MISSING = {
@@ -28,8 +11,8 @@ module.exports.TOKEN_MISSING = {
   code,
 };
 
-module.exports.LOGOUT_FAILED = {
-  message: "Server couldn't log you out.",
+module.exports.TOKEN_INVALID = {
+  message: "Token is invalid.",
   code,
 };
 
