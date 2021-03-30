@@ -32,7 +32,7 @@ module.exports = (req, res, next) => {
 
   const { login, role, id } = result.payload;
 
-  // *** Asign payload values for potential further use
+  // *** Assign payload values for potential further use
   req.id = id;
   req.login = login;
   req.role = role;
