@@ -46,15 +46,18 @@ controller.get("/:id", async (req, res) => {
 
 // ~> Add user
 controller.post("/", async (req, res) => {
-  const { name, email, login, password } = req.body;
+  const { firstname, surname, email, login, password } = req.body;
 
   const passwordHash = await hash(password);
 
   try {
     const newUser = await prisma.user.create({
       data: {
-        name,
-        email,
+        address: {
+          create: {
+            firstName: name,
+          },
+        },
         credential: {
           create: {
             login: login.toLowerCase(),

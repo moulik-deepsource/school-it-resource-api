@@ -6,21 +6,39 @@ const chalk = require("chalk");
 
 const DefaultUsers = require("../DefaultUsers");
 
+const { toMySQLDate } = require("../tools/Date.tools");
+
 async function main() {
   for (const user of DefaultUsers) {
-    const { name, email, login, password, role } = user;
+    const {
+      firstname,
+      lastname,
+      dateOfBirth,
+      email,
+      login,
+      password,
+      role,
+    } = user;
+
+    const _date = toMySQLDate(dateOfBirth);
 
     const _hash = await hash(password);
 
     await prisma.user.create({
       data: {
-        name,
-        email,
         credential: {
           create: {
             login,
             password: _hash,
             role,
+          },
+        },
+        personalInfo: {
+          create: {
+            firstname,
+            lastname,
+            email,
+            dateOfBirth: _date,
           },
         },
       },
@@ -30,10 +48,16 @@ async function main() {
       chalk.cyan(
         `[SEED] Added ${chalk.white.bold(
           "default"
-        )} user '${login}' with rank '${role}' and password ${password}`
+        )} user '${login}' with rank '${role}' and password '${password}'`
       )
     );
   }
+
+  await prisma.subject.create({
+    data: {
+      name: "Phisics",
+    },
+  });
 }
 
 main()

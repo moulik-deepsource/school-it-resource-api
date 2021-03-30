@@ -2,7 +2,6 @@
 /*
  *   This middleware will intercept each request, fetch potential auth token if needed
  *
- *    Middleware is during development
  */
 
 const { verify } = require("../tools/Token.tools");
