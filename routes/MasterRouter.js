@@ -5,12 +5,13 @@ const router = express.Router();
 
 const PermissionGuard = require("../guards/PermissionGuard");
 
-// ** All needed controllers
-const UserController = require("../controllers/UserController");
+// ** All needed routes
+const StudentRoutes = require("../routes/Student.routes");
 const AuthServerController = require("../controllers/AuthServerController.js");
 
 // ! Route setup
 router.use("/auth", AuthServerController);
-router.use("/users", PermissionGuard, UserController);
+
+router.use("/students", StudentRoutes);
 
 module.exports = router;

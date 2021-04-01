@@ -71,6 +71,32 @@ const randomGroupId = async () => {
   return group.id;
 };
 
+const randomRoomId = async () => {
+  const rooms = await prisma.room.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  const room = rooms[Math.floor(Math.random() * rooms.length)];
+
+  return room.id;
+};
+
+const randomLesson = async () => {
+  const teacherId = await randomTeacherId();
+  const subjectId = await randomSubjectId();
+  const roomId = await randomRoomId();
+
+  const lesson = {
+    teacherId,
+    subjectId,
+    roomId,
+  };
+
+  return lesson;
+};
+
 async function main() {
   for (const user of DefaultUsers) {
     const {
@@ -139,7 +165,6 @@ async function main() {
           create: {
             login,
             password: _hash,
-            role: "student",
           },
         },
 
@@ -271,6 +296,8 @@ async function main() {
     ["16:40", "17:25"],
   ];
 
+  let hourIterator = 1;
+
   for (const hour of hours) {
     const [from, to] = hour;
 
@@ -278,6 +305,7 @@ async function main() {
       data: {
         from,
         to,
+        no: hourIterator++,
       },
     });
   }
@@ -326,7 +354,7 @@ async function main() {
   }
 
   // *** Assigning students to groups (Workaround, cannot set many to many inside bulk update!)
-  console.log(chalk.cyan(`Assining students to groups...`));
+  console.log(chalk.cyan(`Assigning students to groups...`));
 
   const studentsIds = await prisma.student.findMany({
     select: {
@@ -359,6 +387,39 @@ async function main() {
         description: faker.company.catchPhrase(),
         studentId: await randomStudentId(),
         teacherId: await randomTeacherId(),
+      },
+    });
+  }
+
+  // *** Plans
+  console.log(chalk.cyan(`Seeding plans for individual groups...`));
+
+  const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+
+  const groups = await prisma.group.findMany();
+
+  let plans = {};
+
+  for (const group of groups) {
+    for (const day of days) {
+      let dayLessons = [];
+
+      for (let index = 0; index < 5; index++) {
+        const lesson = await randomLesson();
+
+        dayLessons.push({
+          ...lesson,
+          hour_number: index + 1,
+        });
+      }
+
+      plans[day] = dayLessons;
+    }
+
+    await prisma.plan.create({
+      data: {
+        groupId: group.id,
+        ...plans,
       },
     });
   }

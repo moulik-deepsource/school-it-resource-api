@@ -30,7 +30,7 @@ model credential {
   id       String @id @default(uuid())
   login    String @unique @db.VarChar(255)
   password String @db.VarChar(255)
-  role     String @db.VarChar(255)
+  role     String @db.VarChar(255) @default("student")
 
   // Relation's fields
   userId String @unique @map("user_id")
@@ -57,6 +57,21 @@ model personalInfo {
   user user @relation(fields: [userId], references: [id]) // One-to-one
 
   @@map("PersonalInfo")
+}
+
+model plan {
+  id        String @id @default(uuid())
+  monday    Json
+  tuesday   Json
+  wednesday Json
+  thursday  Json
+  friday    Json
+
+  // Relation's fields
+  groupId String @unique @map("group_id")
+
+  // Relations
+  group group @relation(fields: [groupId], references: [id])
 }
 
 model student {
@@ -106,6 +121,7 @@ model group {
 
   // Relation's fields
   student student[]
+  plan    plan?
 
   @@map("Groups")
 }
@@ -170,6 +186,7 @@ model hour {
   id   String @id @default(uuid())
   from String @db.VarChar(255)
   to   String @db.VarChar(255)
-
+  no Int @default(0) @map("number_of")
+  
   @@map("Hours")
 }
