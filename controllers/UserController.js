@@ -97,7 +97,7 @@ controller.put("/:id", async (req, res) => {
       id: _id,
     },
     data: {
-      grade: {
+      group: {
         set: {
           id: grade.id,
         },

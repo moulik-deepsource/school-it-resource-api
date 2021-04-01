@@ -7,83 +7,169 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model address {
+  id         String  @id @default(uuid())
+  address1   String? @db.VarChar(200)
+  address2   String? @db.VarChar(200)
+  address3   String? @db.VarChar(200)
+  city       String? @db.VarChar(200)
+  country    String? @db.VarChar(200)
+  postalCode String? @map("postal_code") @db.VarChar(20)
+  state      String? @db.VarChar(200)
+
+  // Relation's fields
+  personalInfoId String @map("personal_info_id")
+
+  // Relations
+  personalInfo personalInfo @relation(fields: [personalInfoId], references: [id]) // One-to-many
+
+  @@map("Addresses")
+}
+
 model credential {
-  id    String  @id @default(uuid())
+  id       String @id @default(uuid())
   login    String @unique @db.VarChar(255)
   password String @db.VarChar(255)
   role     String @db.VarChar(255)
-  userId   String    @unique
-  user  user   @relation(fields: [userId], references: [id])
+
+  // Relation's fields
+  userId String @unique @map("user_id")
+
+  // Relations
+  user user @relation(fields: [userId], references: [id]) // One-to-one
+
+  @@map("Credentials")
 }
 
 model personalInfo {
-  id    String  @id @default(uuid())
-  user   user   @relation(fields: [userId], references: [id])
-  userId    String
-  firstname String
-  middlename String?
-  lastname String
-  email      String      @unique @db.VarChar(255)
-  dateOfBirth DateTime
-  address address[]
-}
+  id          String   @id @default(uuid())
+  dateOfBirth DateTime @map("date_of_birth")
+  email       String   @unique @db.VarChar(255)
+  firstname   String   @map("first_name")
+  lastname    String   @map("last_name")
+  middlename  String?  @map("middle_name")
 
-model address {
-  id    String  @id @default(uuid())
-  personalInfo    personalInfo  @relation(fields: [personalInfoId], references: [id])
-  personalInfoId  String
-  address1 String
-  address2 String?
-  address3 String?
-  city     String?
-  state    String?
-  country  String?
-  postalCode String?
+  // Relation's fields
+  address address[]
+  userId  String    @map("user_id")
+
+  // Relations
+  user user @relation(fields: [userId], references: [id]) // One-to-one
+
+  @@map("PersonalInfo")
 }
 
 model student {
-  id    String  @id @default(uuid())
-  user  user   @relation(fields: [userId], references: [id])
-  userId String
-  grade      grade[]
-  mark       mark[]
-  homework   homework[]
+  id String @id @default(uuid())
+
+  // Relation's fields
+  userId   String     @map("user_id")
+  group    group[]
+  homework homework[]
+  mark     mark[]
+
+  // Relations
+  user user @relation(fields: [userId], references: [id]) // One-to-one
+
+  @@map("Students")
+}
+
+model teacher {
+  id String @id @default(uuid())
+
+  // Relation's fields
+  userId   String     @map("user_id")
+  homework homework[]
+  mark     mark[]
+
+  // Relations
+  user user @relation(fields: [userId], references: [id]) // One-to-one
+
+  @@map("Teachers")
 }
 
 model user {
-  id    String  @id @default(uuid())
-  student student?
+  id String @id @default(uuid())
+
+  // Relation's fields
+  credential   credential?
   personalInfo personalInfo?
-  credential credential?
+  student      student?
+  teacher      teacher?
+
+  @@map("Users")
 }
 
-model grade {
-  id    String  @id @default(uuid())
+model group {
+  id     String @id @default(uuid())
   symbol String @db.VarChar(255)
-  student   student[]
+
+  // Relation's fields
+  student student[]
+
+  @@map("Groups")
 }
 
 model subject {
-  id      String  @id @default(uuid())
-  name    String   @db.VarChar(255)
+  id   String @id @default(uuid())
+  name String @db.VarChar(255)
+
+  // Relation's fields
+  mark mark[]
+
+
+  @@map("Subjects")
 }
 
 model mark {
-  id String  @id @default(uuid())
-  student student @relation(fields: [studentId], references: [id])
-  studentId String
-  mark String @db.VarChar(255)
-  markWeight Int
-  markDescription String @db.VarChar(255)
-  createdAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  description String   @db.VarChar(255)
+  mark        String   @db.VarChar(255)
+  weight      Int
+
+  // Relation's fields
+  studentId String @map("student_id")
+  teacherId String @map("teacher_id")
+  subjectId String @map("subject_id")
+
+  // Relations
+  student student @relation(fields: [studentId], references: [id]) // One-to-many
+  teacher teacher @relation(fields: [teacherId], references: [id]) // One-to-many
+  subject subject @relation(fields: [subjectId], references: [id]) // One-to-many
+
+  @@map("Marks")
 }
 
 model homework {
-  id String  @id @default(uuid())
-  student student @relation(fields: [studentId], references: [id])
-  studentId String
-  mark Int
-  homeworkDescription String @db.VarChar(255)
-  deadline DateTime
-  createdAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  deadline    DateTime
+  description String   @db.VarChar(255)
+
+  // Relation's fields
+  studentId String @map("student_id")
+  teacherId String @map("teacher_id")
+
+  // Relations
+  student student @relation(fields: [studentId], references: [id]) // One-to-many
+  teacher teacher @relation(fields: [teacherId], references: [id]) // One-to-many
+
+  @@map("Homeworks")
+}
+
+model room {
+  id     String @id @default(uuid())
+  number String @db.VarChar(10)
+  type   String @db.VarChar(255)
+
+  @@map("Rooms")
+}
+
+model hour {
+  id   String @id @default(uuid())
+  from String @db.VarChar(255)
+  to   String @db.VarChar(255)
+
+  @@map("Hours")
 }
