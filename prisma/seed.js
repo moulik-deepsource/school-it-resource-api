@@ -121,10 +121,10 @@ async function main() {
     );
   }
 
-  // *** Random 1000 students
+  // *** Random 100 students
   console.log(chalk.cyan(`Seeding students...`));
 
-  for (let index = 0; index < 1000; index++) {
+  for (let index = 0; index < 100; index++) {
     const _hash = await hash(faker.internet.password());
     const _date = toMySQLDate(faker.date.past());
     const login = (
@@ -163,12 +163,10 @@ async function main() {
     });
   }
 
-  randomStudentId();
-
-  // *** Random 150 teachers
+  // *** Random 50 teachers
   console.log(chalk.cyan(`Seeding teachers...`));
 
-  for (let index = 0; index < 150; index++) {
+  for (let index = 0; index < 50; index++) {
     const _hash = await hash(faker.internet.password());
     const _date = toMySQLDate(faker.date.past());
     const login = (
@@ -246,7 +244,7 @@ async function main() {
   // *** Rooms
   console.log(chalk.cyan(`Seeding rooms...`));
 
-  for (let index = 0; index < 250; index++) {
+  for (let index = 0; index < 50; index++) {
     await prisma.room.create({
       data: {
         number: index.toString(),
@@ -347,6 +345,20 @@ async function main() {
             id: await randomGroupId(),
           },
         },
+      },
+    });
+  }
+
+  // *** Homeworks
+  console.log(chalk.cyan(`Seeding homeworks...`));
+
+  for (let index = 0; index < 50; index++) {
+    await prisma.homework.create({
+      data: {
+        deadline: toMySQLDate(faker.date.future()),
+        description: faker.company.catchPhrase(),
+        studentId: await randomStudentId(),
+        teacherId: await randomTeacherId(),
       },
     });
   }
