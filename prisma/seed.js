@@ -156,7 +156,7 @@ async function main() {
     const login = (
       faker.name.firstName() +
       faker.name.lastName() +
-      (await randomInt(1, 50))
+      randomInt(1, 50)
     ).toLowerCase();
 
     await prisma.user.create({
@@ -197,7 +197,7 @@ async function main() {
     const login = (
       faker.name.firstName() +
       faker.name.lastName() +
-      (await randomInt(1, 50))
+      randomInt(1, 50)
     ).toLowerCase();
 
     await prisma.user.create({
