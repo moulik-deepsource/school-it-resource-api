@@ -6,12 +6,12 @@ const router = express.Router();
 const PermissionGuard = require("../guards/PermissionGuard");
 
 // ** All needed routes
-const StudentRoutes = require("../routes/Student.routes");
+const StudentRoute = require("../routes/Student.route");
 const AuthServerController = require("../controllers/AuthServerController.js");
 
 // ! Route setup
 router.use("/auth", AuthServerController);
 
-router.use("/students", StudentRoutes);
+router.use("/students", StudentRoute);
 
 module.exports = router;
