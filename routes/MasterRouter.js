@@ -3,7 +3,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const PermissionGuard = require("../guards/PermissionGuard");
+// const PermissionGuard = require("../guards/PermissionGuard");
 
 // ** All needed routes
 const StudentRoute = require("../routes/Student.route");

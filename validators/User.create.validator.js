@@ -10,20 +10,15 @@ module.exports = async (user) => {
     addresses: [],
   };
 
-  try {
-    await userCreateSchema.validateAsync(user);
+  await userCreateSchema.validateAsync(user);
 
-    const { credential, personalInfo, address } = user;
+  const { credential, personalInfo, address } = user;
 
-    valid.credential = await credentialSchema.validateAsync(credential);
-    valid.personalInfo = await personalInfoSchema.validateAsync(personalInfo);
+  valid.credential = await credentialSchema.validateAsync(credential);
+  valid.personalInfo = await personalInfoSchema.validateAsync(personalInfo);
 
-    for (const singleAddress of address) {
-      valid.addresses.push(await addressSchema.validateAsync(singleAddress));
-    }
-    return valid;
-  } catch (err) {
-    // Validation error rethrown for preparator try-catch block
-    throw err;
+  for (const singleAddress of address) {
+    valid.addresses.push(await addressSchema.validateAsync(singleAddress));
   }
+  return valid;
 };

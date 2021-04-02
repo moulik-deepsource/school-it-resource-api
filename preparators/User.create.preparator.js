@@ -6,67 +6,62 @@ const userCreateValidator = require("../validators/User.create.validator");
 const userCreatePreparator = async (user, role = "student") => {
   const VALID_ROLES = [null, "student", "teacher"];
 
-  try {
-    if (!VALID_ROLES.includes(role))
-      throw TypeError(
-        "Invalid role supplied to preparator. Provide NULL to preparate data with no role."
-      );
-
-    // Validate incoming data from controller
-    const valid = await userCreateValidator(user);
-
-    // Hash password
-    valid.credential = {
-      ...valid.credential,
-      password: await hash(valid.credential.password),
-    };
-
-    // Extract birth date partials
-    const { birthYear, birthMonth, birthDay } = valid.personalInfo;
-
-    // Get rid of partials for the further destruct use
-    delete valid.personalInfo.birthYear;
-    delete valid.personalInfo.birthMonth;
-    delete valid.personalInfo.birthDay;
-
-    // Combine date
-    const combinedBirthDate = toMySQLDate(
-      `${birthYear}-${birthMonth}-${birthDay}`
+  if (!VALID_ROLES.includes(role))
+    throw TypeError(
+      "Invalid role supplied to preparator. Provide NULL to preparate data with no role."
     );
 
-    // Pretype personalInfo
-    valid.personalInfo = {
-      ...valid.personalInfo,
-      dateOfBirth: combinedBirthDate,
-      address: {
-        create: valid.addresses,
-      },
-    };
+  // Validate incoming data from controller
+  const valid = await userCreateValidator(user);
 
-    // Prepare Prisma-ready object
-    const databaseReadyUser = {
-      data: {
-        credential: {
-          create: {
-            ...valid.credential,
-          },
+  // Hash password
+  valid.credential = {
+    ...valid.credential,
+    password: await hash(valid.credential.password),
+  };
+
+  // Extract birth date partials
+  const { birthYear, birthMonth, birthDay } = valid.personalInfo;
+
+  // Get rid of partials for the further destruct use
+  delete valid.personalInfo.birthYear;
+  delete valid.personalInfo.birthMonth;
+  delete valid.personalInfo.birthDay;
+
+  // Combine date
+  const combinedBirthDate = toMySQLDate(
+    `${birthYear}-${birthMonth}-${birthDay}`
+  );
+
+  // Pretype personalInfo
+  valid.personalInfo = {
+    ...valid.personalInfo,
+    dateOfBirth: combinedBirthDate,
+    address: {
+      create: valid.addresses,
+    },
+  };
+
+  // Prepare Prisma-ready object
+  const databaseReadyUser = {
+    data: {
+      credential: {
+        create: {
+          ...valid.credential,
         },
+      },
 
-        personalInfo: {
-          create: {
-            ...valid.personalInfo,
-          },
+      personalInfo: {
+        create: {
+          ...valid.personalInfo,
         },
       },
-    };
+    },
+  };
 
-    if (role) databaseReadyUser.data[role] = { create: {} };
+  if (role) databaseReadyUser.data[role] = { create: {} };
 
-    return databaseReadyUser;
-  } catch (err) {
-    // Error rethrown for controller try-catch block
-    throw err;
-  }
+  return databaseReadyUser;
 };
 
 module.exports = userCreatePreparator;
