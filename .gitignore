@@ -6,4 +6,8 @@ env
 .env
 /env
 
+vscode
+/vscode
+.vscode
+
 start.bat

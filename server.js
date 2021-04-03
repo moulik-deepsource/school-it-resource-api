@@ -25,7 +25,7 @@ app.use(require("helmet")());
 app.use(require("./tools/JSONValidator.tools.js"));
 
 // *** Routes
-app.use(require("./routes/MasterRouter.js"));
+app.use(require("./routes"));
 
 // *** 404
 app.use((req, res, next) => {

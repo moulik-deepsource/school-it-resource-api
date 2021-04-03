@@ -7,10 +7,10 @@ const router = express.Router();
 
 // ** All needed routes
 const StudentRoute = require("../routes/Student.route");
-const AuthServerController = require("../controllers/AuthServerController.js");
+const SpecialRoute = require("../routes/Special.route");
 
 // ! Route setup
-router.use("/auth", AuthServerController);
+router.use("/auth", SpecialRoute);
 
 router.use("/students", StudentRoute);
 

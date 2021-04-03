@@ -1,15 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
-const { Router } = require("express");
 
 const prisma = new PrismaClient({
   errorFormat: "pretty",
 });
 
-// ~~> Mounted as /users
-const controller = Router();
-
-// ~> Get user credentials for
-controller.get("/:login", async (req, res) => {
+// ~> Get user credentials for specified login
+module.exports.getCredentialsByLogin = async (req, res) => {
   const { login } = req.params;
 
   try {
@@ -28,11 +24,4 @@ controller.get("/:login", async (req, res) => {
   } catch {
     res.json({ error: "Credentials error" });
   }
-});
-
-// ~~> Database disconnect
-(async () => {
-  await prisma.$disconnect();
-})();
-
-module.exports = controller;
+};
