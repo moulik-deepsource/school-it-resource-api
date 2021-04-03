@@ -1,7 +1,7 @@
 {
   "name": "school-managment-api",
   "version": "1.0.0",
-  "description": "School managment SQL-based API",
+  "description": "School management SQL-based API",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
