@@ -20,23 +20,10 @@ const userCreatePreparator = async (user, role = "student") => {
     password: await hash(valid.credential.password),
   };
 
-  // Extract birth date partials
-  const { birthYear, birthMonth, birthDay } = valid.personalInfo;
-
-  // Get rid of partials for the further destruct use
-  delete valid.personalInfo.birthYear;
-  delete valid.personalInfo.birthMonth;
-  delete valid.personalInfo.birthDay;
-
-  // Combine date
-  const combinedBirthDate = toMySQLDate(
-    `${birthYear}-${birthMonth}-${birthDay}`
-  );
-
   // Pretype personalInfo
   valid.personalInfo = {
     ...valid.personalInfo,
-    dateOfBirth: combinedBirthDate,
+    dateOfBirth: toMySQLDate(valid.personalInfo.dateOfBirth),
     address: {
       create: valid.addresses,
     },

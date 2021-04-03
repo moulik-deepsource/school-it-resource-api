@@ -9,10 +9,12 @@ const router = express.Router();
 const StudentRoute = require("../routes/Student.route");
 const SpecialRoute = require("../routes/Special.route");
 const SubjectRoute = require("../routes/Subject.route");
+const HomeworkRoute = require("../routes/Homework.route");
 
 // ! Route setup
 router.use("/auth", SpecialRoute);
 router.use("/subjects", SubjectRoute);
 router.use("/students", StudentRoute);
+router.use("/homeworks", HomeworkRoute);
 
 module.exports = router;
