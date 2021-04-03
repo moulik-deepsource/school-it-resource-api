@@ -10,7 +10,7 @@ const {
   isPermitted,
 } = require("../tools/Permission.tools");
 
-const PrettyError = require("../tools/Errors.tools");
+const { PrettyError } = require("../tools/Errors.tools");
 const {
   TOKEN_MISSING,
   TOKEN_INVALID,

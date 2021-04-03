@@ -8,10 +8,11 @@ const router = express.Router();
 // ** All needed routes
 const StudentRoute = require("../routes/Student.route");
 const SpecialRoute = require("../routes/Special.route");
+const SubjectRoute = require("../routes/Subject.route");
 
 // ! Route setup
 router.use("/auth", SpecialRoute);
-
+router.use("/subjects", SubjectRoute);
 router.use("/students", StudentRoute);
 
 module.exports = router;

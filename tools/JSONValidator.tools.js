@@ -2,7 +2,7 @@
 
 // *** Potential error handling
 const { JSON_INVALID } = require("../tools/Error.messages");
-const PrettyError = require("../tools/Errors.tools");
+const { PrettyError } = require("../tools/Errors.tools");
 
 module.exports = (err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
