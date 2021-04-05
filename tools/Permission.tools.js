@@ -49,7 +49,9 @@ module.exports.isPermitted = (req, restrictions) => {
         throw Break;
       }
     });
-  } catch {}
+  } catch(error) {
+    console.log(error)
+  }
 
   // *** Return restrictions check result
   return result;
